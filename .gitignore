@@ -1,0 +1,16 @@
+# Godot
+numerjumping/.godot/
+*.import
+numerjumping/NumerJumping.pck
+
+# Xcode
+numerjumping/NumerJumping.xcodeproj/xcuserdata/
+numerjumping/NumerJumping.xcodeproj/project.xcworkspace/xcuserdata/
+*.xcuserstate
+
+# MoltenVK / large binaries
+numerjumping/MoltenVK.xcframework/
+numerjumping/NumerJumping.xcframework/
+
+# macOS
+.DS_Store
