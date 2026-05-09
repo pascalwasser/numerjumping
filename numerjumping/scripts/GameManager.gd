@@ -26,13 +26,10 @@ func next_correct_value() -> int:
 	return correct_value_at(current_step + 1)
 
 func wrong_value_at(step: int) -> int:
-	# Pick a nearby wrong number that is not the correct answer
 	var correct := correct_value_at(step)
-	var offset := (randi() % 3 + 1) * current_multiplier
-	if randi() % 2 == 0:
-		return correct + offset
-	else:
-		return maxi(1, correct - offset)
+	var offset := randi() % 4 + 1
+	var wrong := correct + (offset if randi() % 2 == 0 else -offset)
+	return maxi(1, wrong)
 
 func on_platform_landed(value: int) -> void:
 	var expected := correct_value_at(current_step + 1)
