@@ -8,9 +8,9 @@ var scroll_speed : float = 80.0
 const VIEWPORT_W := 390.0
 const VIEWPORT_H := 844.0
 const START_Y    := 680.0
-const LEFT_X     := VIEWPORT_W * 0.27
-const RIGHT_X    := VIEWPORT_W * 0.73
 const CENTER_X   := VIEWPORT_W * 0.5
+const COLS_3     := [0.25, 0.50, 0.75]
+const COLS_4     := [0.125, 0.375, 0.625, 0.875]
 const MAX_LIVES  := 4
 
 @onready var gm           : GameManager     = $GameManager
@@ -85,14 +85,27 @@ func _spawn_start_platform() -> void:
 func _spawn_challenge_row(row: int) -> void:
 	if row > gm.TOTAL_STEPS:
 		return
-	var y            := START_Y - row * PLATFORM_VERTICAL_GAP
-	var correct_val  := gm.correct_value_at(row)
-	var wrong_val    := gm.wrong_value_at(row)
-	var correct_left := randi() % 2 == 0
-	var lv := correct_val if correct_left else wrong_val
-	var rv := wrong_val   if correct_left else correct_val
-	platforms.append(_make_platform(LEFT_X,  y, lv, correct_left,     row))
-	platforms.append(_make_platform(RIGHT_X, y, rv, not correct_left, row))
+	var y    := START_Y - row * PLATFORM_VERTICAL_GAP
+	var cols := COLS_4 if row % 2 == 0 else COLS_3
+
+	var correct_col := randi() % cols.size()
+	var correct_val := gm.correct_value_at(row)
+
+	# Build shuffled list of wrong-column indices
+	var wrong_cols : Array = []
+	for i in cols.size():
+		if i != correct_col:
+			wrong_cols.append(i)
+	wrong_cols.shuffle()
+
+	# 3-col rows: 1–2 wrong platforms; 4-col rows: 2–3 wrong platforms
+	var min_wrong := 1 if cols.size() == 3 else 2
+	var keep      := randi() % (wrong_cols.size() - min_wrong + 1) + min_wrong
+
+	platforms.append(_make_platform(VIEWPORT_W * cols[correct_col], y, correct_val, true, row))
+	for i in wrong_cols.slice(0, keep):
+		platforms.append(_make_platform(VIEWPORT_W * cols[i], y, gm.wrong_value_at(row), false, row))
+
 	highest_spawned_row = row
 
 func _make_platform(x: float, y: float, value: int, is_correct: bool, row: int) -> Node2D:
@@ -227,5 +240,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 
 	row_plats.sort_custom(func(a, b): return a.global_position.x < b.global_position.x)
-	var jumped_to : Node2D = row_plats[0] if tap_pos.x < VIEWPORT_W / 2.0 else row_plats[1]
-	player.jump_to(jumped_to)
+	var zone_w := VIEWPORT_W / float(row_plats.size())
+	var idx    := clamp(int(tap_pos.x / zone_w), 0, row_plats.size() - 1)
+	player.jump_to(row_plats[idx])

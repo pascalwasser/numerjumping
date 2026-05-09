@@ -3,26 +3,26 @@
 [ext_resource type="Script" path="res://scripts/Platform.gd" id="1_platform"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
-size = Vector2(160, 18)
+size = Vector2(90, 18)
 
 [node name="Platform" type="StaticBody2D" groups=["platforms"]]
 script = ExtResource("1_platform")
 
 [node name="Sprite" type="ColorRect" parent="."]
-offset_left = -80.0
+offset_left = -45.0
 offset_top = -9.0
-offset_right = 80.0
+offset_right = 45.0
 offset_bottom = 9.0
 color = Color(0.35, 0.6, 0.9, 1)
 
 [node name="Label" type="Label" parent="."]
-offset_left = -80.0
+offset_left = -45.0
 offset_top = -14.0
-offset_right = 80.0
+offset_right = 45.0
 offset_bottom = 14.0
 horizontal_alignment = 1
 vertical_alignment = 1
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 18
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_1")
