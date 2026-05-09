@@ -241,5 +241,5 @@ func _unhandled_input(event: InputEvent) -> void:
 
 	row_plats.sort_custom(func(a, b): return a.global_position.x < b.global_position.x)
 	var zone_w := VIEWPORT_W / float(row_plats.size())
-	var idx    := clamp(int(tap_pos.x / zone_w), 0, row_plats.size() - 1)
+	var idx: int = clamp(int(tap_pos.x / zone_w), 0, row_plats.size() - 1)
 	player.jump_to(row_plats[idx])
