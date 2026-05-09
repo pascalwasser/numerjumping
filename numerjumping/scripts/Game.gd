@@ -127,7 +127,6 @@ func _on_step_correct(step: int) -> void:
 		platforms.erase(p)
 		p.queue_free()
 
-	await get_tree().create_timer(0.5).timeout
 	player.locked = false
 
 func _on_step_wrong() -> void:
