@@ -54,7 +54,7 @@ func _start_level(multiplier: int) -> void:
 
 	gm.start_level(multiplier)
 	label_series.text = "× " + str(multiplier)
-	label_step.text   = "0 / 10"
+	label_step.text   = "0 / " + str(gm.TOTAL_STEPS)
 
 	_spawn_start_platform()
 	_spawn_challenge_row(1)
@@ -110,7 +110,7 @@ func _on_landed_on(platform: Node) -> void:
 	gm.on_platform_landed(platform.get("value") as int)
 
 func _on_step_correct(step: int) -> void:
-	label_step.text = str(step) + " / 10"
+	label_step.text = str(step) + " / " + str(gm.TOTAL_STEPS)
 	current_row     = step
 	var ahead_y := START_Y - step * PLATFORM_VERTICAL_GAP - VIEWPORT_H * 0.25
 	camera_target_y = min(camera_target_y, ahead_y)
@@ -159,7 +159,7 @@ func _on_fell_off_screen() -> void:
 		_start_level(gm.current_multiplier)
 
 func _on_level_complete(multiplier: int) -> void:
-	label_step.text = "10 / 10"
+	label_step.text = str(gm.TOTAL_STEPS) + " / " + str(gm.TOTAL_STEPS)
 	panel_result.show()
 	var next_m := multiplier + 1
 	if next_m > 10:

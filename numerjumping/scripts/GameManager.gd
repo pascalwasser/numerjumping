@@ -6,7 +6,7 @@ signal game_over
 signal step_correct(step: int)
 signal step_wrong
 
-const TOTAL_STEPS := 10
+const TOTAL_STEPS := 9
 const MULTIPLIERS := [2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 var current_multiplier: int = 2
@@ -20,7 +20,7 @@ func start_value() -> int:
 	return current_multiplier
 
 func correct_value_at(step: int) -> int:
-	return current_multiplier * step
+	return current_multiplier * (step + 1)
 
 func next_correct_value() -> int:
 	return correct_value_at(current_step + 1)
