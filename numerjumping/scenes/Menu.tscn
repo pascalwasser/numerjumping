@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://cmenuscene"]
+
+[ext_resource type="Script" uid="uid://cmenugd" path="res://scripts/Menu.gd" id="1_menu"]
+
+[node name="Menu" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_menu")

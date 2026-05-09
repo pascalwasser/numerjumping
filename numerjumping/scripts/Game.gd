@@ -1,7 +1,9 @@
 extends Node2D
 
 const PLATFORM_VERTICAL_GAP := 150.0
-const SCROLL_SPEED           := 60.0
+const SCROLL_SPEEDS          := [30.0, 55.0, 80.0, 115.0, 160.0]
+
+var scroll_speed : float = 80.0
 
 const VIEWPORT_W := 390.0
 const VIEWPORT_H := 844.0
@@ -32,6 +34,7 @@ var last_platform       : Node  = null
 var fell_off            : bool  = false
 
 func _ready() -> void:
+	scroll_speed = SCROLL_SPEEDS[GameSettings.speed_level]
 	panel_result.hide()
 	gm.connect("level_complete", _on_level_complete)
 	gm.connect("step_correct",   _on_step_correct)
@@ -39,7 +42,7 @@ func _ready() -> void:
 	player.connect("landed_on",  _on_landed_on)
 	btn_next.connect("pressed",  _on_btn_next)
 	_update_lives_display()
-	_start_level(2)
+	_start_level(GameSettings.series_start)
 
 func _start_level(multiplier: int) -> void:
 	current_row         = 0
@@ -68,7 +71,7 @@ func _start_level(multiplier: int) -> void:
 	camera.position.y  = camera_target_y
 
 func _process(delta: float) -> void:
-	camera_target_y -= SCROLL_SPEED * delta
+	camera_target_y -= scroll_speed * delta
 	camera.position.y = move_toward(camera.position.y, camera_target_y, 300.0 * delta)
 
 	if not panel_result.visible and not fell_off:
@@ -160,8 +163,9 @@ func _on_fell_off_screen() -> void:
 func _on_level_complete(multiplier: int) -> void:
 	label_step.text = str(gm.TOTAL_STEPS) + " / " + str(gm.TOTAL_STEPS)
 	panel_result.show()
-	var next_m := multiplier + 1
-	if next_m > 10:
+	var series_end := GameSettings.series_start + 9
+	var next_m     := multiplier + 1
+	if next_m > series_end:
 		label_result.text = "All done!\nYou're a number master!"
 		btn_next.text     = "Play Again"
 	else:
@@ -178,11 +182,12 @@ func _on_btn_next() -> void:
 	if lives <= 0:
 		lives = MAX_LIVES
 		_update_lives_display()
-		_start_level(2)
+		_start_level(GameSettings.series_start)
 	else:
-		var next_m := gm.current_multiplier + 1
-		if next_m > 10:
-			next_m = 2
+		var series_end := GameSettings.series_start + 9
+		var next_m     := gm.current_multiplier + 1
+		if next_m > series_end:
+			next_m = GameSettings.series_start
 		_start_level(next_m)
 
 func _update_lives_display() -> void:
